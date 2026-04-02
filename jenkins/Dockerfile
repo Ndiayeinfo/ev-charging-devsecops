@@ -23,5 +23,8 @@ RUN install -m 0755 -d /etc/apt/keyrings \
   && apt-get install -y --no-install-recommends docker-ce-cli \
   && rm -rf /var/lib/apt/lists/*
 
+# Évite les erreurs "dubious ownership" quand Jenkins change d'utilisateur (root/jenkins)
+RUN git config --system --add safe.directory '*'
+
 USER jenkins
 
