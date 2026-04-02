@@ -6,6 +6,7 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: ev-charging-devsecops-jenkins
+    user: root
     restart: unless-stopped
     ports:
       - "8090:8080"   # UI Jenkins (localhost:8090)

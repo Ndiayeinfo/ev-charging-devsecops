@@ -373,6 +373,9 @@ docker exec -it ev-charging-devsecops-jenkins cat /var/jenkins_home/secrets/init
 ```
 
 > Le conteneur Jenkins est configuré pour accéder à Docker via le montage de `/var/run/docker.sock`.
+>
+> Si tu vois l’erreur `permission denied while trying to connect to the docker API at unix:///var/run/docker.sock`,
+> lance Jenkins en `root` (c’est déjà le cas dans `jenkins/docker-compose.yml` via `user: root`).
 
 ### Ce que fait le pipeline
 
