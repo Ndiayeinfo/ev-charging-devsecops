@@ -1,0 +1,71 @@
+version: "3.9"
+
+services:
+  billing-ms:
+    image: "${DOCKER_HUB_USER:-ndiyeinf}/ev-charging-devsecops-billing-ms:${IMAGE_TAG:-latest}"
+    container_name: ev-charging-billing-ms
+    ports:
+      - "8083:8083"
+    environment:
+      SPRING_DATASOURCE_URL: "jdbc:mysql://mysql:3306/ev_charging?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC"
+      SPRING_DATASOURCE_USERNAME: "root"
+      SPRING_DATASOURCE_PASSWORD: "changeme"
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: "kafka:29092"
+      # billing-ms n'utilise pas Redis pour l'instant
+    depends_on:
+      - mysql
+      - kafka
+    networks:
+      - ev-charging-net
+
+  mysql:
+    image: mysql:8.0
+    container_name: ev-charging-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: changeme
+      MYSQL_DATABASE: ev_charging
+    ports:
+      - "3306:3306"
+    command: >
+      --character-set-server=utf8mb4
+      --collation-server=utf8mb4_unicode_ci
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - ev-charging-net
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.6.1
+    container_name: ev-charging-zookeeper
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - "2181:2181"
+    networks:
+      - ev-charging-net
+
+  kafka:
+    image: confluentinc/cp-kafka:7.6.1
+    container_name: ev-charging-kafka
+    depends_on:
+      - zookeeper
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092,PLAINTEXT_HOST://localhost:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    networks:
+      - ev-charging-net
+
+networks:
+  ev-charging-net:
+    driver: bridge
+
+volumes:
+  mysql_data:
+

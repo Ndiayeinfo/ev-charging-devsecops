@@ -1,0 +1,22 @@
+version: "3.9"
+
+services:
+  jenkins:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ev-charging-devsecops-jenkins
+    restart: unless-stopped
+    ports:
+      - "8090:8080"   # UI Jenkins (localhost:8090)
+      - "50000:50000" # agents JNLP (optionnel)
+    volumes:
+      - jenkins_home:/var/jenkins_home
+      # Permet au Jenkins dans le conteneur de lancer des "agents Docker"
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      JAVA_OPTS: "-Djenkins.install.runSetupWizard=true"
+
+volumes:
+  jenkins_home:
+

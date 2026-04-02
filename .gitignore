@@ -1,0 +1,26 @@
+target/
+*.class
+
+# Maven
+*.log
+.mvn/wrapper/maven-wrapper.jar
+.m2/
+
+# IDE
+.idea/
+*.iml
+.classpath
+.project
+.settings/
+
+# OS
+Thumbs.db
+Desktop.ini
+
+# DevSecOps reports / local artifacts
+dependency-check/
+gitleaks.sarif
+
+# Jenkins local scripts/output
+tools/
+
