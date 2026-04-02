@@ -63,7 +63,8 @@ pipeline {
       }
       post {
         always {
-          archiveArtifacts artifacts: 'dependency-check/**/*', allowEmptyArchive: true
+          // Rapports générés sous chaque module (ex. station-ms/dependency-check/station-ms/)
+          archiveArtifacts artifacts: '**/dependency-check/**', allowEmptyArchive: true
         }
       }
     }
@@ -89,10 +90,6 @@ pipeline {
     }
   }
 
-  post {
-    always {
-      junit allowEmptyResults: true, testResults: '**/target/surefire-reports/*.xml'
-    }
-  }
+  // Pas de step junit : aucun *Test.java → Surefire ne produit pas de XML (évite les warnings Jenkins)
 }
 
