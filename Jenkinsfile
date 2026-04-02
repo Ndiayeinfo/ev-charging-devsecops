@@ -54,9 +54,10 @@ pipeline {
         script {
           docker.image(env.MAVEN_IMAGE).inside {
             sh "mvn -q -f common-ms/pom.xml install"
-            sh "mvn -q -f station-ms/pom.xml org.owasp:dependency-check-maven:check -Dformat=HTML -DoutputDirectory=dependency-check/station-ms || true"
-            sh "mvn -q -f session-ms/pom.xml org.owasp:dependency-check-maven:check -Dformat=HTML -DoutputDirectory=dependency-check/session-ms || true"
-            sh "mvn -q -f billing-ms/pom.xml org.owasp:dependency-check-maven:check -Dformat=HTML -DoutputDirectory=dependency-check/billing-ms || true"
+            // Pas de .NET dans ce projet : désactive l'analyseur d'assemblies (évite l'erreur "dotnet ... not found")
+            sh "mvn -q -f station-ms/pom.xml org.owasp:dependency-check-maven:check -Dformat=HTML -DassemblyAnalyzerEnabled=false -DoutputDirectory=dependency-check/station-ms || true"
+            sh "mvn -q -f session-ms/pom.xml org.owasp:dependency-check-maven:check -Dformat=HTML -DassemblyAnalyzerEnabled=false -DoutputDirectory=dependency-check/session-ms || true"
+            sh "mvn -q -f billing-ms/pom.xml org.owasp:dependency-check-maven:check -Dformat=HTML -DassemblyAnalyzerEnabled=false -DoutputDirectory=dependency-check/billing-ms || true"
           }
         }
       }

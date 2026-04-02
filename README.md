@@ -381,7 +381,7 @@ docker exec -it ev-charging-devsecops-jenkins cat /var/jenkins_home/secrets/init
 
 - **Build & tests** Maven (common + station + session + billing)
 - **Secrets scan** : Gitleaks → artifact `gitleaks.sarif`
-- **SCA** : OWASP Dependency-Check → rapports HTML en artifacts
+- **SCA** : OWASP Dependency-Check → rapports HTML en artifacts (l’analyseur **.NET Assembly** est désactivé : ce projet est en Java ; sans `dotnet` sur l’agent, Dependency-Check affichait une erreur si des `.dll` apparaissaient dans des dépendances)
 - **SAST / qualité** : SonarQube (optionnel)
 
 ### Pré-requis Jenkins (minimum)
