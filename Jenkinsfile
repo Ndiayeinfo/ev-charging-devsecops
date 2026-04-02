@@ -10,7 +10,7 @@ pipeline {
     MAVEN_OPTS = '-Dmaven.repo.local=.m2/repository'
     GITLEAKS_VERSION = '8.21.2'
     MAVEN_IMAGE = 'maven:3.9.9-eclipse-temurin-17'
-    GITLEAKS_IMAGE = 'zricethezav/gitleaks:8.21.2'
+    GITLEAKS_IMAGE = 'zricethezav/gitleaks:v8.21.2'
   }
 
   stages {
